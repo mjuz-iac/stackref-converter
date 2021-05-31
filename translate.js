@@ -67,7 +67,7 @@ function translate(directory) {
           : indexedName
       }
 
-      const mjus = createUniqueName("mjus")
+      const mjuz = createUniqueName("mjuz")
 
 
       // find Pulumi import
@@ -168,7 +168,7 @@ function translate(directory) {
                 const access =
                   call.getName() == 'getProvider' ? 'providers' :
                   call.getName() == 'getOutputSync' || call.getName() == 'requireOutputSync' ? 'wishesSync' :
-                  'wishes'
+                  'wishes.exports'
 
                 const value = args[0].getLiteralValue()
 
@@ -208,10 +208,10 @@ function translate(directory) {
           + ' '
 
         const configuration =
-          "{ host: " + config + ".require('infrastructureHost')" +
-          ", port: " + config + ".require('infrastructurePort') }"
+          "{ host: " + config + ".require('" + decl.name + "Host')" +
+          ", port: " + config + ".require('" + decl.name + "Port') }"
 
-        decl.node.setInitializer('new ' + mjus + '.Remote<{' + types + '}>(' + decl.arg + ',' + indent + configuration + ')')
+        decl.node.setInitializer('new ' + mjuz + '.Remote<{' + types + '}>(' + decl.arg + ',' + indent + configuration + ')')
       })
 
 
@@ -230,11 +230,11 @@ function translate(directory) {
           + ' '
 
         const configuration =
-          "{ host: " + config + ".require('infrastructureHost')" +
-          ", port: " + config + ".require('infrastructurePort') }"
+          "{ host: " + config + ".require('beneficiaryHost')" +
+          ", port: " + config + ".require('beneficiaryPort') }"
 
         const connection =
-          "new " + mjus + ".RemoteConnection('connection', " + configuration + ")"
+          "new " + mjuz + ".RemoteConnection('beneficiary', " + configuration + ")"
 
         const statements = file.getStatementsWithComments().reverse()
 
@@ -245,7 +245,7 @@ function translate(directory) {
         file.insertStatements(
           lastNoCommentIndex, // workaround
           lineSeparator +
-          "new " + mjus + ".Offer(" + indent + connection + ", " + indent + "'offer', {" + exports + "})")
+          "new " + mjuz + ".Offer(" + indent + connection + ", " + indent + "'exports', {" + exports + "})")
       }
 
 
@@ -260,7 +260,7 @@ function translate(directory) {
           file.insertStatements(afterImportsIndex, lineBreak + 'const ' + config + ' = new ' + pulumiImport + '.Config()' + lineBreak)
         }
 
-        file.insertStatements(afterImportsIndex, "import * as " + mjus + " from '@mjus/core/resources'")
+        file.insertStatements(afterImportsIndex, "import * as " + mjuz + " from '@mjuz/core/resources'")
 
         if (!useExistingPulumiImport)
           file.insertStatements(afterImportsIndex, "import * as " + pulumiImport + " from '@pulumi/pulumi'")
