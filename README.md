@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/372452007.svg)](https://zenodo.org/badge/latestdoi/372452007)
+
 # Pulumi TypeScript Stack References to µs Converter
 
 This program converts stack references in Pulumi TypeScript projects to µs remotes and wishes, and stack outputs to µs offers.
